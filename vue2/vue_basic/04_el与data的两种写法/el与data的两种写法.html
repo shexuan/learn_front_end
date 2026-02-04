@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>el与data的两种写法</title>
+        <!--引入Vue-->
+        <script type="text/javascript" src="../js/vue.js"></script>
+    </head>
+    <body>
+        <!--
+            data与el的两种写法
+                1、el有两种写法
+                    - 创建Vue时候配置；
+                    - 先创建Vue实例，然后mount挂载；
+                2、data两种写法：
+                    - 对象式；
+                    - 函数式；
+                3、一个重要原则：由Vue管理的函数，不要写箭头函数，一旦写了箭头函数，this就不再指向当前vue实例而是指向全局的window了
+        -->
+        <div id="root">
+            <h1>你好，{{name}}</h1>
+        </div>
+    </body>
+    <script type="text/javascript">
+        Vue.config.productionTip = false
+        // el的两种写法
+        const vm = new Vue({
+            // el: '#root',
+            data: {
+                name: "嘿嘿 😋"
+            }
+        })
+        console.log(vm)
+        // vm.$mount("#root")
+
+        // data的两种写法
+        new Vue({
+            el: "#root",
+            // data第一种写法: 对象式
+            // data: {
+            //     name: "嘿你个大头鬼"
+            // }
+            // data第二种写法: 函数式
+            data(){
+                console.log("####", this)
+                return {
+                    name: "回哦吼吼"
+                }
+            }
+        })
+    </script>
+</html>

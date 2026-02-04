@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>事件修饰符</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style>
+        * {
+            margin-top: 20px;
+        }
+
+        .demo1 {
+            height: 50px;
+            background-color: skyblue;
+        }
+
+        .box1 {
+            padding: 5px;
+            background-color: skyblue;
+        }
+
+        .box2 {
+            padding: 5px;
+            background-color: orange;
+        }
+
+        .list {
+            width: 200px;
+            height: 200px;
+            background-color: peru;
+            overflow: auto;
+        }
+
+        li {
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+        Vue中的事件修饰符：
+            1、prevent：阻止默认事件（常用）；
+            2、stop：阻止事件冒泡（常用）；
+            3、once：事件只触发一次（常用）；
+            4、capture: 使用事件的捕获模式；
+            5、self：只有event.target是当前操作的元素时，才能触发事件；
+            6、passive：事件的默认行为立即执行，无需等待事件回调执行完毕；
+
+
+    -->
+    <div id="root">
+        <h2>欢迎来到{{name}}学习</h2>
+        <!--阻止默认事件（常用）-->
+        <a href="https://www.bilibili.com" @click.prevent="showInfo">点我提示信息-阻止</a>
+
+        <!--阻止事件冒泡（常用）-->
+        <div class="demo1" @click="showInfo">
+            <button @click.stop="showInfo">点我提示信息-冒泡</button>
+            <!--修饰符可以连续写，@click.prevent.stop-->
+        </div>
+
+        <!--事件只触发一次（常用）-->
+        <button @click.once="showInfo">点我提示信息-once</button>
+
+        <!--使用事件的捕获模式-->
+        <div class="box1" @click.capture="showMsg(1)">
+            div1-捕获1
+            <div class="box2" @click="showMsg(2)">
+                div2-捕获2
+            </div>
+        </div>
+
+        <!--只有event.target是当前操作的元素时才触发事件-->
+        <div class="demo1" @click.self="showInfo">
+            <button @click="showInfo">点我提示信息-自我</button>
+        </div>
+
+        <!--事件的默认行为立即执行，无需等待事件回调执行完毕-->
+        <ul @wheel.passive="demo" class="list">
+            <li>l1</li>
+            <li>l2</li>
+            <li>l3</li>
+            <li>l4</li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false
+    const vm = new Vue({
+        el: "#root",
+        data: {
+            name: "家里蹲"
+        },
+        methods: {
+            showInfo(e) {
+                alert("我要验牌")
+                console.log(e.target)
+            },
+            showMsg(msg) {
+                console.log(msg)
+            },
+            demo() {
+                for (let i = 0; i < 100; i++) {
+                    console.log("#")
+                }
+                console.log("累坏了")
+            }
+        },
+
+    })
+</script>
+
+
+</html>

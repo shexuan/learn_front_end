@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+
+<body>
+    <!-- 
+        Vue监视数据的原理：
+            1、Vue会监视data中所有层次的数据。
+
+            2、如何监测对象中的数据？
+              通过setter实现监视，且要在new Vue时就传入要监测的数据。
+                1）对象中后添加的属性，Vue默认不做响应式处理；
+                2）如需给后添加的属性做响应式，需要使用下面的API：
+                    - Vue.set(target, propertyName/index, value)
+                    - vm.$set(target, propertyName/index, value)
+            
+            3、如何监测数组中的数据？
+              通过包裹数组更新元素的方法实现，本质是做了两件事：
+                - 调用原生对应的方法对数组进行更新；
+                - 重新解析模板，进而更新页面；
+            
+            4、在Vue修改数组中的某个元素一定要使用如下方法：
+                1）使用这些API：push()、pop()、shift()、unshift()、slice()、sort()、reverse()
+                2）Vue.set() 或 vm.$set()
+            
+            特别注意：Vue.set() 和 vm.$set() 不能给vm或vm的根数据对象添加属性。
+
+    -->
+    <div id="root">
+        <h2>人员列表</h2>
+        <input type="text" placeholder="请输入名字" v-model="keyWord">
+        <button @click="sortType=0">原顺序</button>
+        <button @click="sortType=1">年龄降序</button>
+        <button @click="sortType=2">年龄升序</button>
+        <ul>
+            <li v-for="(p, index) of filPersons" :key="index">
+                {{p.name}}-{{p.age}}-{{p.sex}}
+            </li>
+        </ul>
+        <button @click="updateMei">点我更新原始数据第一个元素</button>
+        <hr>
+        <hr>
+
+        <h1>学校信息</h1>
+        <h2>学校名称：{{school.name}}</h2>
+        <h2>学校地址：{{school.address}}</h2>
+        <h2>校长是：{{school.leader}}</h2>
+        <hr>
+
+        <h1>学生信息</h1>
+        <button @click="addSex">添加一个性别属性，默认值是男</button>
+        <h2>姓名：{{student.name}}</h2>
+        <h2 v-if="student.sex">性别：{{student.sex}}</h2>
+        <h2>年龄：真实{{student.age.rAge}}，对外{{student.age.sAge}}</h2>
+        <h2>爱好</h2>
+        <ul>
+            <li v-for="(f,index) of student.hobby" :key="index">
+                {{f}}
+            </li>
+        </ul>
+        <h2>朋友们</h2>
+        <ul>
+            <li v-for="(f, index) of student.friends" :key="index">
+                {{f.name}}--{{f.age}}
+            </li>
+        </ul>
+        <button @click="addFriend">点我给哈利找个朋友</button>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.config.productionTip = false
+    const vm = new Vue({
+        el: "#root",
+        data: {
+            keyWord: '',
+            sortType: 1, // 0-原顺序，1-降序，2-升序
+            persons: [
+                { id: '001', name: '马冬梅', age: 20, sex: '女' },
+                { id: '002', name: '周冬雨', age: 18, sex: '女' },
+                { id: '003', name: '周杰伦', age: 33, sex: '男' },
+                { id: '004', name: '温兆伦', age: 33, sex: '男' }
+            ],
+            school: {
+                name: "霍格沃茨",
+                address: "UK",
+                leader: "Dengbulydo"
+            },
+            student: {
+                name: "Harry Potter",
+                age: {
+                    rAge: 10,
+                    sAge: 20
+                },
+                hobby: ["唱跳", "篮球", "rap"],
+                friends: [
+                    { name: "Rone", age: 19 },
+                    { name: "Hemmy", age: 18 }
+                ]
+            }
+        },
+        computed: {
+            filPersons() {
+                let arr = this.persons.filter((p) => {
+                    return p.name.indexOf(this.keyWord) !== -1
+                })
+                // 判断一下是否需要排序
+                if (this.sortType) {
+                    arr.sort((p1, p2) => {
+                        return this.sortType == 1 ? p2.age - p1.age : p1.age - p2.age
+                    })
+                }
+                return arr
+            }
+        },
+        methods: {
+            updateMei() {
+                this.persons[0].name = '老马'
+                this.persons[0].age = 44
+                this.persons[0].sex = '男'
+                // this.persons[0] = {id:'001', name:'马老师',sex:'男'} // 不奏效
+                // 数组响应式改变需要使用数组专用操作
+                this.persons.splice(0, 1, { id: '001', name: '马老师', age: 44, sex: '男' })
+            },
+            addSex() {
+                // 不起作用，在 Vue 2 中，响应式系统基于 Object.defineProperty() 实现，
+                // 只有在 data 初始化时就存在的属性，才会被转换为 getter/setter
+                // this.student.sex = "男"
+
+                this.$set(this.student, 'sex', "男")
+                // 或下面
+                // Vue.set(this.student, 'sex', '男')
+            },
+            addFriend() {
+                this.student.friends.unshift({ name: 'fudimo', age: 70 })
+            }
+        },
+
+    })
+</script>
+
+</html>

@@ -1,0 +1,6 @@
+.DS_Store
+.prettierrc
+front_end.code-workspace
+
+vue2/node_modules/
+vue2/vue_test/node_modules/
