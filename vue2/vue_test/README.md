@@ -195,7 +195,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
    }
    ```
    2. 调用提供数据：`this.$bus.$emit('event_name', params)`，此时会调用上面的callback_func，`params`则是传给callback_func的；
-4. 最好在`beforeDestroy`钩子中，用`$off`去解绑<span style='color:red'>当前组件所用到的</span>时间。
+4. 最好在`beforeDestroy`钩子中，用`$off`去解绑<span style='color:red'>当前组件所用到的</span>事件。
 
 
 ## 消息发布与订阅（pubsub）
@@ -637,7 +637,7 @@ module.exports = {
 1. 传递参数
    ```vue
    <!-- 跳转并携带query参数，to的字符串写法 -->
-   <router-link :to='/home/message/detail?id=666title=你好'>跳转</router-link>
+   <router-link :to='/home/message/detail?id=666&title=你好'>跳转</router-link>
 
    <!-- 跳转并携带query参数，to的对象写法 -->
    <router-link
