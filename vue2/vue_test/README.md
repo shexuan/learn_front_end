@@ -710,7 +710,8 @@ module.exports = {
             path: 'news',
             component: News
          },
-         {
+         {  
+            path: "message",
             component: Message,
             children: [
                {
@@ -810,7 +811,7 @@ module.exports = {
 2. 具体编码：
    ```vue
    <keep-alive include="News">
-      <router-vie></router-view>
+      <router-view></router-view>
    </keep-alive>
    ```
 
